@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0" />
+<title>Edupulse — Muslim Higher Study School</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          display: ['Poppins', 'sans-serif'],
+          sans: ['Inter', 'sans-serif'],
+        },
+        colors: {
+          forest: { 50:'#f1f8f4', 100:'#dcefe2', 200:'#b9dfc8', 300:'#8dc9a6', 400:'#5cad81', 500:'#3a9163', 600:'#25754e', 700:'#1c5c3f', 800:'#164a33', 900:'#0f3a28', 950:'#08251a' },
+          gold: { 50:'#fdf9ec', 100:'#f9edc7', 200:'#f2da8f', 300:'#e9c157', 400:'#dfab35', 500:'#c9932a', 600:'#a57420' },
+        }
+      }
+    }
+  }
+</script>
+<style>
+  * { -webkit-tap-highlight-color: transparent; }
+  html, body { height:100%; overscroll-behavior-y: none; }
+  body {
+    background: #0f3a28;
+    font-family: 'Inter', sans-serif;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .app-shell { max-width: 480px; margin: 0 auto; min-height: 100vh; background:#f5f7f5; position:relative; }
+  .hero-grad { background: radial-gradient(120% 140% at 15% -10%, #1c5c3f 0%, #0f3a28 55%, #08251a 100%); }
+  .card-shadow { box-shadow: 0 10px 30px -12px rgba(15,58,40,0.15); }
+  .scrollbar-none::-webkit-scrollbar{display:none;}
+  .bottom-nav-btn.active { color:#164a33; }
+  .bottom-nav-btn.active .nav-dot { opacity:1; transform: scale(1); }
+  .nav-dot { opacity:0; transform: scale(0.5); transition: all .2s; }
+  .glass { background: rgba(255,255,255,0.08); backdrop-filter: blur(6px); }
+  .screen { display:none; }
+  .screen.active { display:block; }
+  input:focus { outline:none; }
+</style>
+</head>
+<body>
+<div class="app-shell scrollbar-none overflow-x-hidden">
+
+  <!-- ===================== LOGIN SCREEN ===================== -->
+  <div id="loginScreen" class="min-h-screen hero-grad flex flex-col px-6 pt-16 pb-10 text-white">
+    <div class="flex-1 flex flex-col items-center justify-center text-center">
+      <div class="w-20 h-20 rounded-3xl bg-gold-400 text-forest-950 font-display font-extrabold text-3xl flex items-center justify-center mb-5 shadow-lg">M</div>
+      <h1 class="font-display font-bold text-xl leading-snug">MUSLIM HIGHER<br/>STUDY SCHOOL</h1>
+      <p class="text-forest-200 text-xs tracking-[0.2em] mt-1 uppercase">Edupulse Parent Portal</p>
+    </div>
+
+    <form id="loginForm" class="glass rounded-3xl p-5 space-y-4">
+      <div>
+        <label class="text-xs font-medium text-forest-100 mb-1 block">Admission / Roll No</label>
+        <input id="loginRoll" required class="w-full bg-white/95 text-forest-900 rounded-xl px-4 py-3 text-sm placeholder-forest-400" placeholder="e.g. MHS-2026-014" />
+      </div>
+      <div>
+        <label class="text-xs font-medium text-forest-100 mb-1 block">Password</label>
+        <input id="loginPassword" required type="password" class="w-full bg-white/95 text-forest-900 rounded-xl px-4 py-3 text-sm placeholder-forest-400" placeholder="Enter your password" />
+      </div>
+      <p id="loginError" class="text-xs text-red-300 hidden">Incorrect admission number or password.</p>
+      <button id="loginBtn" type="submit" class="w-full bg-gold-400 text-forest-950 font-display font-bold py-3 rounded-xl text-sm mt-1 active:scale-[0.98] transition-transform">
+        <span id="loginBtnText">Log In</span>
+      </button>
+    </form>
+    <p class="text-center text-[11px] text-forest-300 mt-6">Contact the school office if you don't have your login details.</p>
+  </div>
+
+  <!-- ===================== DASHBOARD (shown after login) ===================== -->
+  <div id="dashboardScreen" class="hidden pb-24">
+
+    <!-- Header -->
+    <div class="hero-grad text-white px-5 pt-7 pb-16 rounded-b-[2rem] relative">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-forest-200 text-[11px] tracking-wide uppercase">Welcome back</p>
+          <p id="headerStudentName" class="font-display font-bold text-lg">—</p>
+        </div>
+        <button id="logoutBtn" class="glass w-9 h-9 rounded-full flex items-center justify-center text-sm">&#10132;</button>
+      </div>
+    </div>
+
+    <!-- Profile Card (overlapping) -->
+    <div class="px-5 -mt-10">
+      <div class="bg-white rounded-2xl card-shadow p-4 flex items-center gap-4">
+        <img id="profilePhoto" src="" onerror="this.src='https://api.dicebear.com/7.x/initials/svg?seed=Student'" class="w-16 h-16 rounded-2xl object-cover bg-forest-100 shrink-0" />
+        <div class="min-w-0">
+          <p id="profileName" class="font-display font-bold text-forest-950 text-base truncate">—</p>
+          <p id="profileClass" class="text-xs text-forest-500 mt-0.5">—</p>
+          <p id="profileFather" class="text-xs text-forest-400 mt-0.5 truncate">—</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screens container -->
+    <div class="px-5 mt-5 space-y-4">
+
+      <!-- HOME SCREEN CONTENT -->
+      <div data-screen="home" class="screen active space-y-4">
+        <div class="grid grid-cols-2 gap-3">
+          <!-- Fees -->
+          <div class="bg-white rounded-2xl card-shadow p-4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xl">&#128176;</span>
+              <span id="feesBadge" class="text-[10px] font-semibold px-2 py-0.5 rounded-full">—</span>
+            </div>
+            <p class="text-xs text-forest-500">Fees Status</p>
+            <p id="feesText" class="font-display font-bold text-forest-950 text-sm mt-0.5">—</p>
+          </div>
+          <!-- Attendance -->
+          <div class="bg-white rounded-2xl card-shadow p-4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xl">&#128197;</span>
+            </div>
+            <p class="text-xs text-forest-500">Attendance</p>
+            <p id="attendanceText" class="font-display font-bold text-forest-950 text-sm mt-0.5">—</p>
+          </div>
+        </div>
+
+        <!-- Result -->
+        <div class="bg-white rounded-2xl card-shadow p-4">
+          <div class="flex items-center gap-2 mb-1.5">
+            <span class="text-lg">&#127942;</span>
+            <p class="text-sm font-semibold text-forest-900">Result</p>
+          </div>
+          <p id="resultText" class="text-sm text-forest-600 leading-relaxed">No result published yet.</p>
+        </div>
+
+        <!-- Notice -->
+        <div class="bg-forest-900 text-white rounded-2xl card-shadow p-4">
+          <div class="flex items-center gap-2 mb-1.5">
+            <span class="text-lg">&#128276;</span>
+            <p class="text-sm font-semibold">Latest Notice / Homework</p>
+          </div>
+          <p id="noticeText" class="text-sm text-forest-100 leading-relaxed">No new notices.</p>
+        </div>
+      </div>
+
+      <!-- FEES SCREEN -->
+      <div data-screen="fees" class="screen space-y-4">
+        <div class="bg-white rounded-2xl card-shadow p-5 text-center">
+          <span class="text-3xl">&#128176;</span>
+          <p class="text-xs text-forest-500 mt-2">Current Fees Status</p>
+          <p id="feesTextBig" class="font-display font-bold text-2xl text-forest-950 mt-1">—</p>
+          <p class="text-xs text-forest-400 mt-3">For fee challans or payment queries, please contact the school office directly.</p>
+        </div>
+      </div>
+
+      <!-- RESULT SCREEN -->
+      <div data-screen="result" class="screen space-y-4">
+        <div class="bg-white rounded-2xl card-shadow p-5">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-lg">&#127942;</span>
+            <p class="text-sm font-semibold text-forest-900">Academic Result</p>
+          </div>
+          <p id="resultTextBig" class="text-sm text-forest-600 leading-relaxed whitespace-pre-line">No result published yet.</p>
+        </div>
+        <div class="bg-white rounded-2xl card-shadow p-5">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-lg">&#128197;</span>
+            <p class="text-sm font-semibold text-forest-900">Attendance</p>
+          </div>
+          <p id="attendanceTextBig" class="text-sm text-forest-600">—</p>
+        </div>
+      </div>
+
+      <!-- CONTACT / PROFILE SCREEN -->
+      <div data-screen="contact" class="screen space-y-4">
+        <div class="bg-white rounded-2xl card-shadow p-5 space-y-3">
+          <p class="text-sm font-semibold text-forest-900 mb-1">Student Details</p>
+          <div class="flex justify-between text-sm"><span class="text-forest-400">Name</span><span id="cName" class="font-medium text-forest-900">—</span></div>
+          <div class="flex justify-between text-sm"><span class="text-forest-400">Father Name</span><span id="cFather" class="font-medium text-forest-900">—</span></div>
+          <div class="flex justify-between text-sm"><span class="text-forest-400">Class</span><span id="cClass" class="font-medium text-forest-900">—</span></div>
+          <div class="flex justify-between text-sm"><span class="text-forest-400">Roll No</span><span id="cRoll" class="font-medium text-forest-900">—</span></div>
+        </div>
+        <div class="bg-forest-900 text-white rounded-2xl card-shadow p-5 space-y-3">
+          <p class="text-sm font-semibold mb-1">School Contact</p>
+          <div class="flex items-center gap-3 text-sm"><span>&#128222;</span><span>+92 300 1234567</span></div>
+          <div class="flex items-center gap-3 text-sm"><span>&#9993;&#65039;</span><span>info@muslimhigherstudy.edu.pk</span></div>
+          <div class="flex items-center gap-3 text-sm"><span>&#128205;</span><span>Main Campus Road, Islamabad</span></div>
+        </div>
+        <button id="logoutBtn2" class="w-full border border-red-200 text-red-500 font-semibold text-sm py-3 rounded-xl bg-white">Log Out</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div id="bottomNav" class="hidden fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] bg-white border-t border-forest-100 px-2 pb-[calc(env(safe-area-inset-bottom,0px)+0.4rem)] pt-2 z-40">
+    <div class="grid grid-cols-4 text-center">
+      <button data-nav="home" class="bottom-nav-btn active flex flex-col items-center gap-0.5 py-1 text-forest-300 text-[10px] font-medium">
+        <span class="text-lg">&#127968;</span>Home
+        <span class="nav-dot w-1 h-1 rounded-full bg-forest-700 mt-0.5"></span>
+      </button>
+      <button data-nav="fees" class="bottom-nav-btn flex flex-col items-center gap-0.5 py-1 text-forest-300 text-[10px] font-medium">
+        <span class="text-lg">&#128176;</span>Fees
+        <span class="nav-dot w-1 h-1 rounded-full bg-forest-700 mt-0.5"></span>
+      </button>
+      <button data-nav="result" class="bottom-nav-btn flex flex-col items-center gap-0.5 py-1 text-forest-300 text-[10px] font-medium">
+        <span class="text-lg">&#127942;</span>Result
+        <span class="nav-dot w-1 h-1 rounded-full bg-forest-700 mt-0.5"></span>
+      </button>
+      <button data-nav="contact" class="bottom-nav-btn flex flex-col items-center gap-0.5 py-1 text-forest-300 text-[10px] font-medium">
+        <span class="text-lg">&#128100;</span>Profile
+        <span class="nav-dot w-1 h-1 rounded-full bg-forest-700 mt-0.5"></span>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore, collection, query, where, getDocs, onSnapshot, doc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBJfKa9d7RJwvCDr_ftM6yxvtuH7lO32YY",
+  authDomain: "edupulse-f4025.firebaseapp.com",
+  projectId: "edupulse-f4025",
+  storageBucket: "edupulse-f4025.firebasestorage.app",
+  messagingSenderId: "746198705430",
+  appId: "1:746198705430:web:affced2523cc8436461c37",
+  measurementId: "G-Y7T62X67JE"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const studentsCol = collection(db, "students");
+
+const loginScreen = document.getElementById("loginScreen");
+const dashboardScreen = document.getElementById("dashboardScreen");
+const bottomNav = document.getElementById("bottomNav");
+
+let unsubscribeLive = null;
+let currentDocId = null;
+
+// ---------- Session persistence ----------
+function saveSession(docId) {
+  try { localStorage.setItem("edupulse_docId", docId); } catch (e) {}
+}
+function clearSession() {
+  try { localStorage.removeItem("edupulse_docId"); } catch (e) {}
+}
+function getSession() {
+  try { return localStorage.getItem("edupulse_docId"); } catch (e) { return null; }
+}
+
+window.addEventListener("DOMContentLoaded", async () => {
+  const savedId = getSession();
+  if (savedId) {
+    try {
+      const snap = await getDocs(query(studentsCol));
+      const found = snap.docs.find(d => d.id === savedId);
+      if (found) {
+        enterDashboard(savedId);
+        return;
+      }
+    } catch (e) { /* fall through to login */ }
+  }
+});
+
+// ---------- Login ----------
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const roll = document.getElementById("loginRoll").value.trim();
+  const pass = document.getElementById("loginPassword").value;
+  const errEl = document.getElementById("loginError");
+  const btnText = document.getElementById("loginBtnText");
+  errEl.classList.add("hidden");
+  btnText.textContent = "Logging in...";
+
+  try {
+    const q = query(studentsCol, where("rollNo", "==", roll));
+    const snap = await getDocs(q);
+    let matched = null;
+    snap.forEach(d => {
+      const data = d.data();
+      if (data.password === pass) matched = d.id;
+    });
+
+    if (!matched) {
+      errEl.classList.remove("hidden");
+      btnText.textContent = "Log In";
+      return;
+    }
+
+    saveSession(matched);
+    enterDashboard(matched);
+  } catch (err) {
+    console.error(err);
+    errEl.textContent = "Something went wrong. Please try again.";
+    errEl.classList.remove("hidden");
+    btnText.textContent = "Log In";
+  }
+});
+
+function enterDashboard(docId) {
+  currentDocId = docId;
+  loginScreen.classList.add("hidden");
+  dashboardScreen.classList.remove("hidden");
+  bottomNav.classList.remove("hidden");
+  document.getElementById("loginBtnText").textContent = "Log In";
+
+  if (unsubscribeLive) unsubscribeLive();
+  unsubscribeLive = onSnapshot(doc(db, "students", docId), (docSnap) => {
+    if (!docSnap.exists()) return;
+    renderStudent(docSnap.data());
+  });
+}
+
+function renderStudent(s) {
+  document.getElementById("headerStudentName").textContent = s.name || "Student";
+  document.getElementById("profilePhoto").src = s.photoURL || "";
+  document.getElementById("profileName").textContent = s.name || "—";
+  document.getElementById("profileClass").textContent = `Class ${s.class || '—'} · Roll ${s.rollNo || '—'}`;
+  document.getElementById("profileFather").textContent = `Father: ${s.fatherName || '—'}`;
+
+  const fees = s.feesStatus || "Pending";
+  document.getElementById("feesText").textContent = fees;
+  document.getElementById("feesTextBig").textContent = fees;
+  const badge = document.getElementById("feesBadge");
+  badge.textContent = fees;
+  badge.className = "text-[10px] font-semibold px-2 py-0.5 rounded-full " + (
+    fees === "Paid" ? "bg-forest-100 text-forest-700" :
+    fees === "Partial" ? "bg-gold-100 text-gold-600" : "bg-red-100 text-red-500"
+  );
+
+  document.getElementById("attendanceText").textContent = s.attendance || "Not recorded";
+  document.getElementById("attendanceTextBig").textContent = s.attendance || "Not recorded";
+
+  document.getElementById("resultText").textContent = s.result || "No result published yet.";
+  document.getElementById("resultTextBig").textContent = s.result || "No result published yet.";
+
+  document.getElementById("noticeText").textContent = s.notice || "No new notices.";
+
+  document.getElementById("cName").textContent = s.name || "—";
+  document.getElementById("cFather").textContent = s.fatherName || "—";
+  document.getElementById("cClass").textContent = s.class || "—";
+  document.getElementById("cRoll").textContent = s.rollNo || "—";
+}
+
+// ---------- Logout ----------
+function logout() {
+  clearSession();
+  if (unsubscribeLive) { unsubscribeLive(); unsubscribeLive = null; }
+  currentDocId = null;
+  dashboardScreen.classList.add("hidden");
+  bottomNav.classList.add("hidden");
+  loginScreen.classList.remove("hidden");
+  document.getElementById("loginForm").reset();
+}
+document.getElementById("logoutBtn").addEventListener("click", logout);
+document.getElementById("logoutBtn2").addEventListener("click", logout);
+
+// ---------- Bottom Nav ----------
+document.querySelectorAll(".bottom-nav-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const target = btn.dataset.nav;
+    document.querySelectorAll(".screen").forEach(s => s.classList.toggle("active", s.dataset.screen === target));
+    document.querySelectorAll(".bottom-nav-btn").forEach(b => b.classList.toggle("active", b === btn));
+    document.getElementById("dashboardScreen").scrollIntoView({ behavior: "instant", block: "start" });
+  });
+});
+</script>
+</body>
+</html>
